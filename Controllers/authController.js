@@ -9,8 +9,8 @@ export async function userRegister(req, res){
         if(!name||!email||!password||!role){
             return res.status(400).json({message:"name, email,password and role are required"});
         }
-        const existingUser=Boolean(await User.findOne({email}));
-        if(!existingUser){
+        const existingUser=Boolean(await User.exists({email}));
+        if(existingUser){
             return res.status(400).json({message:"user already exist"});
         }
         const hashedPassword= await bcrypt.hash(password, 10);
@@ -21,7 +21,9 @@ export async function userRegister(req, res){
             password:hashedPassword,
             role:role,
         });
-        res.status(201).json({message:"Registered Successfully"});
+        res.status(201).json({message:"Registered Successfully"
+
+        });
     }
     catch(err){
         return res.status(500).json({message:"registration failed", error:err.message});
@@ -43,6 +45,7 @@ export async function login(req,res){
         if(!passwordMatch){
             return res.json(401).json({message:"Invalid Passwoprd"});
         }
+
         res.status(200).json({message:"Login successful"});
 
     }
