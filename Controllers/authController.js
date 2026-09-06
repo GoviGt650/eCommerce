@@ -2,6 +2,7 @@ import jsonwebtoken from "jsonwebtoken";
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import User from '../Models/userModel.js';
+import { generateToken } from "../middleware/authMiddleware.js";
 
 export async function userRegister(req, res){
     try{
@@ -9,8 +10,8 @@ export async function userRegister(req, res){
         if(!name||!email||!password||!role){
             return res.status(400).json({message:"name, email,password and role are required"});
         }
-        const existingUser=Boolean(await User.findOne({email}));
-        if(!existingUser){
+        const existingUser=await User.findOne({email});
+        if(existingUser){
             return res.status(400).json({message:"user already exist"});
         }
         const hashedPassword= await bcrypt.hash(password, 10);
@@ -37,13 +38,14 @@ export async function login(req,res){
         }
         const user=await User.findOne({email});
         if(!user){
-            return res.json(401).json({message:"Invalid Email"});
+            return res.status(401).json({message:"Invalid Email"});
         }
         const passwordMatch = await bcrypt.compare(password, user.password);
         if(!passwordMatch){
-            return res.json(401).json({message:"Invalid Passwoprd"});
+            return res.status(401).json({message:"Invalid Password"});
         }
-        res.status(200).json({message:"Login successful"});
+        const token=generateToken(user);
+        res.status(200).json({message:"Login successful", users:user.name, tokens:token});
 
     }
     catch(err){
