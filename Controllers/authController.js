@@ -10,7 +10,11 @@ export async function userRegister(req, res){
         if(!name||!email||!password||!role){
             return res.status(400).json({message:"name, email,password and role are required"});
         }
+<<<<<<< HEAD
         const existingUser=await User.findOne({email});
+=======
+        const existingUser=Boolean(await User.exists({email}));
+>>>>>>> 4a8cd53025c11f807fec6ca9f5bb48415a47ddba
         if(existingUser){
             return res.status(400).json({message:"user already exist"});
         }
@@ -22,7 +26,9 @@ export async function userRegister(req, res){
             password:hashedPassword,
             role:role,
         });
-        res.status(201).json({message:"Registered Successfully"});
+        res.status(201).json({message:"Registered Successfully"
+
+        });
     }
     catch(err){
         return res.status(500).json({message:"registration failed", error:err.message});
@@ -44,8 +50,13 @@ export async function login(req,res){
         if(!passwordMatch){
             return res.status(401).json({message:"Invalid Password"});
         }
+<<<<<<< HEAD
         const token=generateToken(user);
         res.status(200).json({message:"Login successful", users:user.name, tokens:token});
+=======
+
+        res.status(200).json({message:"Login successful"});
+>>>>>>> 4a8cd53025c11f807fec6ca9f5bb48415a47ddba
 
     }
     catch(err){
