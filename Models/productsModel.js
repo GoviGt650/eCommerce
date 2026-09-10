@@ -3,7 +3,7 @@ const productSchema=new mongoose.Schema({
     name: { type:String, required:true, trim:true },
     description: { type:String, required:true },
     price:{type:Number, required:true},
-    category:{type:mongoose.Schema.Types.Mixed, required:true},
+    category:{type:String, required:true},
     stock:{type:Number, required:true},
     published:{type:Boolean, required:true}
 },
@@ -11,5 +11,5 @@ const productSchema=new mongoose.Schema({
     timestamps:true
 }
 );
-const products=new mongoose.model('Product', productSchema);
+const products=mongoose.model('Product', productSchema);
 export default products;

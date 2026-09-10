@@ -2,10 +2,9 @@ import jwt from "jsonwebtoken";
 import "dotenv";
 const key = process.env.SECRET_KEY;
 
-const token = req.headers.authorization;
-export const tokenVerify = async (req,req,next) => {
+export const tokenVerify = async (req,res,next) => {
     try {
-        const authToken = req.headres.authorization;
+        const authToken = req.headers.authorization;
         if (!authToken || !authToken.startsWith("Bearer ")) {
             return res.status(400).json({
                 mesage : "Invalid Token"
