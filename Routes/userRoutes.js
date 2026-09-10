@@ -3,7 +3,7 @@ import {
     userRegister,
     login
 } from '../Controllers/authController.js';
-import { createProduct } from '../controllers/adminController.js';
+import { createProduct } from "../controllers/adminController.js";
 
 const router= express.Router();
 router.post('/register',userRegister);

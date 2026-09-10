@@ -1,12 +1,52 @@
 import User from '../Models/userModel.js';
 import products from '../Models/productsModel.js';
+import mongoose from 'mongoose';
 
- export async function viewProducts(req,res){
+export async function viewAllPublishedProducts(req, res){
     try{
-        const products= await products.find({published:true});
-        res.json(products);
+        const{category,minPrice, maxPrice, sort, order, page, limit}=req.query;
+        const filter={published:true};
+        if(category)filter.category=category;
+        if(minPrice||maxPrice){
+            filter.price={};
+            if(minPrice)filter.price.$gte=Number(minPrice);
+            if(maxPrice)filter.price.$lte=Number(maxPrice);
+        }
+        const sortOrder = order === 'asc' ?1:-1;
+        const products = await Product.find(filter)
+        .sort({[sort]: sortOrder})
+        .skip((page-1)*limit)
+        .limit(parseInt(limit));
+        const totalProducts=await Product.countDocuments(filter);
+        const totalPages = Math.ceil(totalProducts / limit);
+        res.json({
+            page:parseInt(page),
+            limit:parseInt(limit),
+            totalProducts,
+            totalPages,
+            products
+        }); 
     }
     catch(err){
-        return res.status(500).json({message:"Database Error", Error:err.message});
+        res.status(500).json({message:"Database error", error:err.message});
     }
- }
+}
+
+export async function viewPublishedProduct(req,res){
+    try{
+        if(!mongoose.isValidObjectId(req.params.id)){
+            return res.status(400).json({message:"Not a valid ID"});
+        }
+        const product=await Product.findById({
+            _id:req.params.id,
+            published:true
+        });
+        if(!product){
+            return res.status(400).json({message:"Product not found"});
+        }
+        res.status(200).json({message:"Product retrived",product});
+    }
+    catch(err){
+        res.status(500).json({message:"Database error", error:err.message});
+    }
+}
