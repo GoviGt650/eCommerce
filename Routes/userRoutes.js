@@ -18,6 +18,7 @@ router.put('/updateproduct/:id', tokenVerify, updateProductById);
 router.delete('/deleteproduct/:id', tokenVerify, deleteProductById);
 
 router.get('/getusers', tokenVerify, getAllUsers);
+router.delete('/deleteusers/:id', tokenVerify, deleteUserById);
 
 router.get('/viewallproduct', tokenVerify, viewAllPublishedProducts);
 router.get('/viewsingleproduct/:id', tokenVerify,viewPublishedProduct);

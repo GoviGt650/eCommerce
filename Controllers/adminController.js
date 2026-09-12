@@ -191,13 +191,13 @@ export const deleteUserById = async( req, res ) => {
             });
         }
         const user = await User.findByIdAndDelete( req.params.id );
-        if( !product ) {
+        if( !user ) {
             return res.status(400).json({
                 message : "No user found to delete"
             })
         }
         return res.status(200).json({
-            product : product,
+            user : user,
             message : "User deleted successfully"
         });
     } catch ( err ) {
