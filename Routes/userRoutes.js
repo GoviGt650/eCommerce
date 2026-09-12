@@ -4,7 +4,7 @@ import {
     login
 } from '../Controllers/authController.js';
 import{ viewAllPublishedProducts, viewPublishedProduct} from "../Controllers/userControllers.js";
-import { createProduct, updateProductById, getAllProducts, getAllUsers, getProductById, deleteProductById } from "../Controllers/adminController.js";
+import { createProduct, updateProductById, getAllProducts, getAllUsers, getProductById, deleteProductById, deleteUserById } from "../Controllers/adminController.js";
 import { tokenVerify  } from '../middleware/tokenVerify.js';
 
 const router= express.Router();
@@ -20,5 +20,6 @@ router.delete('/deleteproduct/:id', tokenVerify, deleteProductById);
 
 router.get('/viewAllProduct', tokenVerify, viewAllPublishedProducts);
 router.get('/viewsingleProduct/:id', tokenVerify,viewPublishedProduct);
+router.delete('/deleteuser/:id', tokenVerify, deleteUserById);
 
 export default router;
