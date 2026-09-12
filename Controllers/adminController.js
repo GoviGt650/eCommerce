@@ -32,7 +32,7 @@ export const createProduct = async ( req, res ) => {
 
 export const getAllProducts = async ( req, res ) => {
     try {
-        const {published} =req.query;
+        const { published, exportData } =req.query;
         const filter={}
         if (published !== undefined) {
             filter.published = published === 'true';
@@ -41,7 +41,17 @@ export const getAllProducts = async ( req, res ) => {
             const product = await products.find({ published : true });
             return res.status(200).json( product );
         }
-        if( req.user.role === "admin" ) {
+        if( req.user.role === "admin" && exportData === "csv" ) {
+            const product = await products.find().lean();
+            const jsonToCsv = new Parser({
+                fields : [ "_id", "name", "description", "price", "category", "stock", "published"]
+            });
+            const csvData = jsonToCsv.parse(product);
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', 'attachment; filename = products-data.csv')
+            return res.status(200).send( csvData );
+        }
+        if( req.user.role === "admin"  ) {
             const product = await products.find(filter);
             return res.status(200).json( product );
         }
