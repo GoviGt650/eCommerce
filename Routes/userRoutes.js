@@ -14,11 +14,12 @@ router.post('/login', login);
 router.post('/createproduct', tokenVerify, createProduct);
 router.get('/getproducts', tokenVerify, getAllProducts);
 router.get('/getproducts/:id', tokenVerify, getProductById);
-router.get('/getusers', tokenVerify, getAllUsers);
 router.put('/updateproduct/:id', tokenVerify, updateProductById);
 router.delete('/deleteproduct/:id', tokenVerify, deleteProductById);
 
-router.get('/viewAllProduct', tokenVerify, viewAllPublishedProducts);
-router.get('/viewsingleProduct/:id', tokenVerify,viewPublishedProduct);
+router.get('/getusers', tokenVerify, getAllUsers);
+
+router.get('/viewallproduct', tokenVerify, viewAllPublishedProducts);
+router.get('/viewsingleproduct/:id', tokenVerify,viewPublishedProduct);
 
 export default router;
