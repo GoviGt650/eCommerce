@@ -177,3 +177,33 @@ export const deleteProductById = async( req, res ) => {
         });
     }
 }
+
+export const deleteUserById = async( req, res ) => {
+    try {
+        if( !mongoose.isValidObjectId(req.params.id) ){
+            return res.status(400).json({
+                message : "Invalid Object Id"
+            });
+        }
+        if( req.user.role !== "admin"){
+            return res.status(400).json({
+                message : "You are not authorised"
+            });
+        }
+        const user = await User.findByIdAndDelete( req.params.id );
+        if( !product ) {
+            return res.status(400).json({
+                message : "No user found to delete"
+            })
+        }
+        return res.status(200).json({
+            product : product,
+            message : "User deleted successfully"
+        });
+    } catch ( err ) {
+        return res.status(400).json({
+            message : "DB Error",
+            error : err.message
+        });
+    }
+}
