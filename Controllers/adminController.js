@@ -71,3 +71,104 @@ export const getAllUsers = async ( req, res ) => {
         });       
     }
 }
+
+export const updateProductById = async ( req, res ) => {
+    try {
+        if(!mongoose.isValidObjectId(req.params.id)){
+            return res.status(400).json({
+                message : "Invalid object id"
+            });
+        }
+        const changes = {};
+        if( req.body.name !== undefined ) {
+            changes.name = req.body.name;
+        }
+        if( req.body.description !== undefined ) {
+            changes.description = req.body.description;
+        }
+        if( req.body.price !== undefined ) {
+            changes.price = req.body.price;
+        }
+        if( req.body.category !== undefined ) {
+            changes.category = req.body.category;
+        }
+        if( req.body.stock !== undefined ) {
+            changes.stock = req.body.stock;
+        }
+        if( req.body.published !== undefined ) {
+            changes.published = req.body.published;
+        }
+        if( req.user.role !== "admin"){
+            return res.status(400).json({
+                message : "You are not authorised"
+            });
+        }
+        const product = await products.findByIdAndUpdate(
+            req.params.id,
+            changes,
+            {
+                new : true,
+                runValidators : true
+            }
+        );
+        return res.status(201).json( product );
+    } catch(err) {
+        return res.status(400).json({
+            message : "DB Error",
+            error : err.message
+        });         
+    }
+}
+
+export const getProductById = async (req, res) => {
+    try {
+        if( !mongoose.isValidObjectId(req.params.id) ){
+            return res.status(400).json({
+                message : "Invalid Object Id"
+            });
+        }
+        const product = await products.findById( req.params.id );
+        if( !product ) {
+            return res.status(400).json({
+                message : "No product found"
+            })
+        }
+        return res.status(200).json(product);
+        
+    } catch (err) {
+        return res.status(400).json({
+            message : "DB Error",
+            error : err.message
+        });  
+    }
+}
+
+export const deleteProductById = async( req, res ) => {
+    try {
+        if( !mongoose.isValidObjectId(req.params.id) ){
+            return res.status(400).json({
+                message : "Invalid Object Id"
+            });
+        }
+        if( req.user.role !== "admin"){
+            return res.status(400).json({
+                message : "You are not authorised"
+            });
+        }
+        const product = await products.findByIdAndDelete( req.params.id );
+        if( !product ) {
+            return res.status(400).json({
+                message : "No product found to delete"
+            })
+        }
+        return res.status(200).json({
+            product : product,
+            message : "Prodct deleted successfully"
+        });
+    } catch ( err ) {
+        return res.status(400).json({
+            message : "DB Error",
+            error : err.message
+        });
+    }
+}
