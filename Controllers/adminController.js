@@ -32,12 +32,17 @@ export const createProduct = async ( req, res ) => {
 
 export const getAllProducts = async ( req, res ) => {
     try {
+        const {published} =req.query;
+        const filter={}
+        if (published !== undefined) {
+            filter.published = published === 'true';
+        }
         if( req.user.role === "user" ) {
             const product = await products.find({ published : true });
             return res.status(200).json( product );
         }
         if( req.user.role === "admin" ) {
-            const product = await products.find();
+            const product = await products.find(filter);
             return res.status(200).json( product );
         }
     } catch (err) {

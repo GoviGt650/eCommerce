@@ -3,6 +3,7 @@ import {
     userRegister,
     login
 } from '../Controllers/authController.js';
+import{ viewAllPublishedProducts, viewPublishedProduct} from "../Controllers/userControllers.js";
 import { createProduct, updateProductById, getAllProducts, getAllUsers, getProductById, deleteProductById } from "../Controllers/adminController.js";
 import { tokenVerify  } from '../middleware/tokenVerify.js';
 
@@ -16,5 +17,8 @@ router.get('/getproducts/:id', tokenVerify, getProductById);
 router.get('/getusers', tokenVerify, getAllUsers);
 router.put('/updateproduct/:id', tokenVerify, updateProductById);
 router.delete('/deleteproduct/:id', tokenVerify, deleteProductById);
+
+router.get('/viewAllProduct', tokenVerify, viewAllPublishedProducts);
+router.get('/viewsingleProduct/:id', tokenVerify,viewPublishedProduct);
 
 export default router;
