@@ -1,0 +1,4 @@
+"_id","name","description","price","category","stock","published"
+"6aa4dc65aca6ef0c8ea69033","Oneplus 15","powerful flagship smartphone featuring a stunning display, high-performance hardware",500000,"Phones",3,true
+"6aa4e1020c170d319304d28f","ASUS Zenbook 15 OLED","sleek, lightweight laptop with a vibrant OLED display, powerful performance, and long-lasting battery life.",1050000,"Laptop",3,false
+"6aa4fbd88b2565d4d966960a","Oneplus buds 2 pro","immersive sound, powerful bass, adaptive noise cancellation, and long-lasting battery life in a premium wireless design",5000,"audio",3,true

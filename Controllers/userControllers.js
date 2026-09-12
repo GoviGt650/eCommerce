@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 export async function viewAllPublishedProducts(req, res){
     try{
         const{category,minPrice, maxPrice, sort, order, page, limit}=req.query;
-        const filter={published:true};
+        const filter={};
         if(category)filter.category=category;
         if(minPrice||maxPrice){
             filter.price={};
@@ -13,11 +13,11 @@ export async function viewAllPublishedProducts(req, res){
             if(maxPrice)filter.price.$lte=Number(maxPrice);
         }
         const sortOrder = order === 'asc' ?1:-1;
-        const allProducts = await products.find(filter)
+        const allProducts = await products.find({...filter, published:"true"})
         .sort({[sort]: sortOrder})
         .skip((page-1)*limit)
         .limit(parseInt(limit));
-        const totalProducts=await products.countDocuments(filter);
+        const totalProducts=await products.countDocuments({...filter, published:"true"});
         const totalPages = Math.ceil(totalProducts / limit);
         res.json({
             page:parseInt(page),
