@@ -3,13 +3,17 @@ import {
     userRegister,
     login
 } from '../Controllers/authController.js';
-import { createProduct } from "../controllers/adminController.js";
+import { createProduct, updateProductById, getAllProducts, getAllUsers, getProductById, deleteProductById } from "../Controllers/adminController.js";
+import { tokenVerify  } from '../middleware/tokenVerify.js';
 
 const router= express.Router();
 router.post('/register',userRegister);
 router.post('/login', login);
 router.post('/createproduct', tokenVerify, createProduct);
 router.get('/getproducts', tokenVerify, getAllProducts);
+router.get('/getproducts/:id', tokenVerify, getProductById);
 router.get('/getusers', tokenVerify, getAllUsers);
+router.put('/updateproduct/:id', tokenVerify, updateProductById);
+router.delete('/deleteproduct/:id', tokenVerify, deleteProductById);
 
 export default router;
