@@ -4,7 +4,7 @@ import products from "../Models/productsModel.js";
 import { Parser } from "json2csv";
 export const createProduct = async ( req, res ) => {
     try {
-        const {  name, description, price, category, stock, published } = req.body;
+        const { name, description, price, category, stock, published } = req.body;
         if( req.user.role !== "admin" ) {
             return res.status(400).json({
             message : "You are not authorized",
