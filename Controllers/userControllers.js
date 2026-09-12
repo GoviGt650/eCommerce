@@ -13,18 +13,18 @@ export async function viewAllPublishedProducts(req, res){
             if(maxPrice)filter.price.$lte=Number(maxPrice);
         }
         const sortOrder = order === 'asc' ?1:-1;
-        const products = await Product.find(filter)
+        const allProducts = await products.find(filter)
         .sort({[sort]: sortOrder})
         .skip((page-1)*limit)
         .limit(parseInt(limit));
-        const totalProducts=await Product.countDocuments(filter);
+        const totalProducts=await products.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / limit);
         res.json({
             page:parseInt(page),
             limit:parseInt(limit),
             totalProducts,
             totalPages,
-            products
+            allProducts
         }); 
     }
     catch(err){
@@ -37,7 +37,7 @@ export async function viewPublishedProduct(req,res){
         if(!mongoose.isValidObjectId(req.params.id)){
             return res.status(400).json({message:"Not a valid ID"});
         }
-        const product=await Product.findById({
+        const product=await products.findById({
             _id:req.params.id,
             published:true
         });
