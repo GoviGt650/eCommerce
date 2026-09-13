@@ -228,15 +228,10 @@ export const importProductsCSV = [
 
     async (req, res) => {
         try {
-
             if (!req.file) {
-                return res.status(400).json({
-                    message: 'CSV file is required'
-                });
+                return res.status(400).json({message: 'CSV file is required'});
             }
-
             const rows = [];
-
             Readable
                 .from(req.file.buffer.toString())
                 .pipe(csv())
@@ -244,55 +239,39 @@ export const importProductsCSV = [
                 .on('end', async () => {
 
                     if (!rows.length) {
-                        return res.status(400).json({
-                            message: 'CSV file is empty'
-                        });
+                        return res.status(400).json({message: 'CSV file is empty'});
                     }
-
+                    
                     const productsData = [];
                     const errors = [];
 
                     rows.forEach((row, index) => {
-
                         const rowErrors = [];
-
                         if (!row.name?.trim()) {
                             rowErrors.push('name is required');
                         }
-
                         if (!row.description?.trim()) {
                             rowErrors.push('description is required');
                         }
-
                         const price = Number(row.price);
-
                         if (!price || price <= 0) {
                             rowErrors.push('invalid price');
                         }
-
                         if (!row.category?.trim()) {
                             rowErrors.push('category is required');
                         }
-
                         const stock = Number(row.stock);
-
                         if (isNaN(stock) || stock < 0) {
                             rowErrors.push('invalid stock');
                         }
-
                         if (!['true', 'false'].includes(row.published?.toLowerCase())) {
                             rowErrors.push('published must be true or false');
                         }
 
-                        if (rowErrors.length) {
-
-                            errors.push({
-                                row: index + 2,
-                                errors: rowErrors
-                            });
-
+                        if (rowErrors.length)
+                        {
+                            errors.push({row: index + 2,errors: rowErrors});
                         } else {
-
                             productsData.push({
                                 name: row.name.trim(),
                                 description: row.description.trim(),
@@ -301,32 +280,18 @@ export const importProductsCSV = [
                                 stock,
                                 published: row.published.toLowerCase() === 'true'
                             });
-
                         }
                     });
 
                     if (errors.length) {
-                        return res.status(400).json({
-                            message: 'CSV validation failed',
-                            errors
-                        });
+                        return res.status(400).json({message: 'CSV validation failed',errors});
                     }
-
                     const result = await products.insertMany(productsData);
-
-                    return res.status(201).json({
-                        message: 'Products imported successfully',
-                        count: result.length
-                    });
+                    return res.status(201).json({message: 'Products imported successfully',count: result.length});
                 });
 
         } catch (err) {
-
-            return res.status(500).json({
-                message: 'Import failed',
-                error: err.message
-            });
-
+            return res.status(500).json({message: 'Import failed',error: err.message});
         }
     }
 ];
