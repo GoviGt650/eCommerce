@@ -75,14 +75,24 @@ export const getAllUsers = async ( req, res ) => {
             message : "You are not authorized",
         });
         }
-        const users = await User.find({ role : "user" }).lean();
+        const users = await User.find({ role : "user" }).select("-password").lean();
         const jsonToCsv = new Parser({
             fields : [ "_id", "name", "email", "role"]
         });
-        const csvData = jsonToCsv.parse(users);
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename = users-data.csv')
-        return res.status(200).send( csvData );
+
+        if (req.headers.accept?.includes("text/csv")) {
+             const jsonToCsv = new Parser({ fields: ["_id", "name", "email", "role"] }); 
+             const csvData = jsonToCsv.parse(users); 
+             res.setHeader("Content-Tyectpe", "text/csv"); 
+             res.setHeader( "Content-Disposition", "attachment; filename=users-data.csv" ); 
+             return res.status(200).send(csvData); 
+        }
+        return res.status(200).json(users);
+
+        // const csvData = jsonToCsv.parse(users);
+        // res.setHeader('Content-Type', 'text/csv');
+        // res.setHeader('Content-Disposition', 'attachment; filename = users-data.csv')
+        // return res.status(200).send( csvData );
 
     } catch (err) {
         return res.status(400).json({
